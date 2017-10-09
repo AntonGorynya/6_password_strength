@@ -1,8 +1,11 @@
 # Password Strength Calculator
 
 This script assess strength of password. Assessment is in the range from 1 to 10.
+
 Where:
+
 1 - mean simplest password
+
 10 - mean most security password
 
 # Quickstart
