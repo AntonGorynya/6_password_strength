@@ -1,4 +1,5 @@
 import getpass
+from collections import Counter
 
 
 def check_len(password):
@@ -14,6 +15,7 @@ def check_len(password):
     else:
         assessment += 5
     return assessment
+
 
 def check_top_password(password):
     assessment = 0
@@ -44,49 +46,40 @@ def check_top_password(password):
                 'zxcvbnm',
                 '1q2w3e'
                 ]
-
     if top_pass.count(password) == 0:
         assessment = assessment + 1
-
     return assessment
 
 
 def check_symbols(password):
     assessment = 0
-    special_simbols = ['@', '#', '$', '!', '?']
+    special_simbols = {'@', '#', '$', '!', '?'}
     low_letter = 0
     upper_letter = 0
-    digit_count = 0
-    special_simbols_count = 0
-    same_letters_count = 0
+    digit_count = False
+    if (list(set(password)&special_simbols)) != []:
+        assessment = assessment + 1
+    if (Counter(password).most_common(1))[0][1] < len(password) / 2:
+        assessment += 1
+    if (set(password)&{str(x) for x in range(10)}) != []:
+        digit_count = True
     for letter in password:
         if 'a' <= letter <= 'z':
             low_letter += 1
         elif 'A' <= letter <= 'Z':
             upper_letter += 1
-        elif '0' <= letter <= '9':
-            digit_count += 1
-        elif special_simbols.count(letter) > 0:
-            special_simbols_count += 1
-        if password.count(letter) > len(password) / 2:
-            same_letters_count += 1
     if (upper_letter != 0) and (low_letter != 0):
         assessment = assessment + 1
-    if (digit_count != 0) and ((upper_letter != 0) and (low_letter != 0)):
+    if (digit_count) and ((upper_letter != 0) and (low_letter != 0)):
         assessment = assessment + 1
-    if special_simbols_count != 0:
-        assessment = assessment + 1
-    if same_letters_count == 0:
-        assessment += 1
     return assessment
-
 
 
 def get_password_strength(password):
     assessment = 0
     assessment = check_len(password) + assessment
     assessment = check_symbols(password) + assessment
-    assessment=check_top_password(password) + assessment
+    assessment = check_top_password(password) + assessment
     return assessment
 
 if __name__ == '__main__':
