@@ -1,4 +1,5 @@
 import getpass
+import re
 from collections import Counter
 
 
@@ -10,10 +11,8 @@ def check_len(password):
         assessment += 2
     elif len(password) < 11:
         assessment += 3
-    elif len(password) < 13:
+    elif len(password) >= 13:
         assessment += 4
-    else:
-        assessment += 5
     return assessment
 
 
@@ -47,41 +46,42 @@ def check_top_password(password):
                 '1q2w3e'
                 ]
     if top_pass.count(password) == 0:
-        assessment = assessment + 1
+        assessment +=  1
     return assessment
 
 
 def check_symbols(password):
     assessment = 0
     special_simbols = {'@', '#', '$', '!', '?'}
-    low_letter = 0
-    upper_letter = 0
-    digit_count = False
     if (list(set(password)&special_simbols)) != []:
-        assessment = assessment + 1
+        assessment += 1
     if (Counter(password).most_common(1))[0][1] < len(password) / 2:
         assessment += 1
-    if (set(password)&{str(x) for x in range(10)}) != []:
-        digit_count = True
-    for letter in password:
-        if 'a' <= letter <= 'z':
-            low_letter += 1
-        elif 'A' <= letter <= 'Z':
-            upper_letter += 1
-    if (upper_letter != 0) and (low_letter != 0):
-        assessment = assessment + 1
-    if (digit_count) and ((upper_letter != 0) and (low_letter != 0)):
-        assessment = assessment + 1
+    if re.search(r'[a-z]', password) and re.search(r'[A-Z]', password):
+        assessment += 1
+    if (re.search(r'[a-z]', password) or re.search(r'[A-Z]', password)) and re.search(r'[0-9]', password):
+        assessment += 1
     return assessment
 
 
-def get_password_strength(password):
+def check_data_in_password(password, user_data):
+    birthday = ''.join(re.findall(r'[0-9]+',user_data))
+    print(birthday)
+    if password.find(birthday) >= 0:
+        return 0
+    else:
+        return 1
+
+
+def get_password_strength(password, user_data):
     assessment = 0
     assessment = check_len(password) + assessment
     assessment = check_symbols(password) + assessment
     assessment = check_top_password(password) + assessment
+    assessment = check_data_in_password(password, user_data) + assessment
     return assessment
 
 if __name__ == '__main__':
+    birthday = input("input your birthday((in DD-MM-YYYY format)): ")
     password = input('Password: ')
-    print('password assesment:', get_password_strength(password))
+    print('password assesment:', get_password_strength(password, birthday))
