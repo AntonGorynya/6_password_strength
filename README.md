@@ -14,10 +14,13 @@ You can download and run it directly through console
 
 Example of script launch on Linux, Python 3.5:
 
-```#!bash
+```bash
+password_strength.py
 
-Password: 1234567
-password assesment: 3
+input your birthday((in DD-MM-YYYY format)): 05-06-1993
+input your company_name: company
+Password: companydfghj!2
+password assesment: 9
 
 ```
 You also can same run it on Windows
