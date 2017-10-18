@@ -46,28 +46,31 @@ def check_top_password(password):
                 '1q2w3e'
                 ]
     if top_pass.count(password) == 0:
-        assessment +=  1
+        assessment += 1
     return assessment
 
 
 def check_symbols(password):
+    frequent_characters = 1
     assessment = 0
     special_simbols = {'@', '#', '$', '!', '?'}
-    if (list(set(password)&special_simbols)) != []:
+    if (list(set(password) & special_simbols)) != []:
         assessment += 1
-    if (Counter(password).most_common(1))[0][1] < len(password) / 2:
+    if (Counter(password).most_common(frequent_characters))[0][1] \
+            < len(password) / 2:
         assessment += 1
     if re.search(r'[a-z]', password) and re.search(r'[A-Z]', password):
         assessment += 1
-    if (re.search(r'[a-z]', password) or re.search(r'[A-Z]', password)) and re.search(r'[0-9]', password):
+    if (re.search(r'[a-z]', password) or re.search(r'[A-Z]', password)) \
+            and re.search(r'[0-9]', password):
         assessment += 1
     return assessment
 
 
 def check_data_in_password(password, user_data):
-    birthday = ''.join(re.findall(r'[0-9]+',user_data))
-    print(birthday)
-    if password.find(birthday) >= 0:
+    birthday = ''.join(re.findall(r'[0-9]+', user_data['birthday']))
+    if password.find(birthday) >= 0 \
+            and password.find(user_data['company_name']) >= 0:
         return 0
     else:
         return 1
@@ -83,5 +86,7 @@ def get_password_strength(password, user_data):
 
 if __name__ == '__main__':
     birthday = input("input your birthday((in DD-MM-YYYY format)): ")
-    password = input('Password: ')
-    print('password assesment:', get_password_strength(password, birthday))
+    company_name = input("input your company_name: ")
+    user_data = {'birthday': birthday, 'company_name': company_name}
+    password = getpass.getpass(prompt='Password: ')
+    print('password assesment:', get_password_strength(password, user_data))
