@@ -1,23 +1,27 @@
 import getpass
 import re
 from collections import Counter
+from string import punctuation
 
 
-def check_len(password):
+def get_len_assessment(password):
     assessment = 0
-    if len(password) < 6:
+    SHORT_LEN = 6
+    MEDIUM_LEN = 9
+    LONG_LEN = 11
+    VERY_LONG_LEN = 13
+    if len(password) < SHORT_LEN:
         assessment += 1
-    elif len(password) < 9:
+    elif len(password) < MEDIUM_LEN:
         assessment += 2
-    elif len(password) < 11:
+    elif len(password) < LONG_LEN:
         assessment += 3
-    elif len(password) >= 13:
+    elif len(password) >= VERY_LONG_LEN:
         assessment += 4
     return assessment
 
 
-def check_top_password(password):
-    assessment = 0
+def check_no_popular(password):
     top_pass = ['123456',
                 '123456789',
                 'qwerty',
@@ -45,16 +49,16 @@ def check_top_password(password):
                 'zxcvbnm',
                 '1q2w3e'
                 ]
-    if top_pass.count(password) == 0:
-        assessment += 1
-    return assessment
+    if password not in top_pass:
+        return True
+    else:
+        return False
 
 
-def check_symbols(password):
+def symbols_assessment(password):
     frequent_characters = 1
     assessment = 0
-    special_simbols = {'@', '#', '$', '!', '?'}
-    if (list(set(password) & special_simbols)) != []:
+    if set(password).intersection(set(punctuation)) != {}:
         assessment += 1
     if (Counter(password).most_common(frequent_characters))[0][1] \
             < len(password) / 2:
@@ -67,21 +71,19 @@ def check_symbols(password):
     return assessment
 
 
-def check_data_in_password(password, user_data):
+def check_data_in_not_password(password, user_data):
     birthday = ''.join(re.findall(r'[0-9]+', user_data['birthday']))
     if password.find(birthday) >= 0 \
             and password.find(user_data['company_name']) >= 0:
-        return 0
+        return False
     else:
-        return 1
+        return True
 
 
 def get_password_strength(password, user_data):
-    assessment = 0
-    assessment = check_len(password) + assessment
-    assessment = check_symbols(password) + assessment
-    assessment = check_top_password(password) + assessment
-    assessment = check_data_in_password(password, user_data) + assessment
+    assessment = get_len_assessment(password) + symbols_assessment(password) \
+                 + check_no_popular(password) \
+                 + check_data_in_not_password(password, user_data)
     return assessment
 
 if __name__ == '__main__':
