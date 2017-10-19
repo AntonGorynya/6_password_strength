@@ -6,17 +6,17 @@ from string import punctuation
 
 def get_len_assessment(password):
     assessment = 0
-    SHORT_LEN = 6
-    MEDIUM_LEN = 9
-    LONG_LEN = 11
-    VERY_LONG_LEN = 13
-    if len(password) < SHORT_LEN:
+    short_len = 6
+    medium_len = 9
+    long_len = 11
+    very_long_len = 13
+    if len(password) < short_len:
         assessment += 1
-    elif len(password) < MEDIUM_LEN:
+    elif len(password) < medium_len:
         assessment += 2
-    elif len(password) < LONG_LEN:
+    elif len(password) < long_len:
         assessment += 3
-    elif len(password) >= VERY_LONG_LEN:
+    elif len(password) >= very_long_len:
         assessment += 4
     return assessment
 
