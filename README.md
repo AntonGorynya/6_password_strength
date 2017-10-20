@@ -25,6 +25,8 @@ password assesment: 9
 ```
 You also can same run it on Windows
 
+You also can update forbiden password list manualy.
+
 # Project Goals
 
 The code is written for educational purposes. Training course for web-developers - [DEVMAN.org](https://devman.org)
