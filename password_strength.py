@@ -24,7 +24,7 @@ def get_len_assessment(password):
 def check_forbiden_pass(password):
     with open('./forbiden_password.txt') as forbiden_pass_file:
         forbiden_pass = forbiden_pass_file.readlines()
-    return (password not in forbiden_pass)
+    return password not in forbiden_pass
 
 
 def symbols_assessment(password):
