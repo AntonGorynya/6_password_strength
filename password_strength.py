@@ -45,8 +45,8 @@ def symbols_assessment(password):
 
 def check_user_data_not_in_password(password, user_data):
     birthday = ''.join(re.findall(r'[0-9]+', user_data['birthday']))
-    return (password.find(birthday) < 0 and
-            password.find(user_data['company_name']) < 0)
+    return password.find(birthday) < 0 and \
+            password.find(user_data['company_name']) < 0
 
 
 def get_password_strength(password, user_data):
