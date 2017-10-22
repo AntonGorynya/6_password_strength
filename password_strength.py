@@ -21,9 +21,13 @@ def get_len_assessment(password):
     return assessment
 
 
-def check_forbiden_pass(password):
-    with open('./forbiden_password.txt') as forbiden_pass_file:
+def load_forbiden_pass(path_to_file):
+    with open(path_to_file) as forbiden_pass_file:
         forbiden_pass = forbiden_pass_file.readlines()
+    return forbiden_pass
+
+
+def check_forbiden_pass(password, forbiden_pass):
     return password not in forbiden_pass
 
 
@@ -46,12 +50,12 @@ def symbols_assessment(password):
 def check_user_data_not_in_password(password, user_data):
     birthday = ''.join(re.findall(r'[0-9]+', user_data['birthday']))
     return password.find(birthday) < 0 and \
-            password.find(user_data['company_name']) < 0
+        password.find(user_data['company_name']) < 0
 
 
-def get_password_strength(password, user_data):
+def get_password_strength(password, user_data, forbiden_pass):
     assessment = get_len_assessment(password) + symbols_assessment(password) \
-                 + check_forbiden_pass(password) \
+                 + check_forbiden_pass(password, forbiden_pass) \
                  + check_user_data_not_in_password(password, user_data)
     return assessment
 
@@ -60,4 +64,6 @@ if __name__ == '__main__':
     company_name = input("input your company_name: ")
     user_data = {'birthday': birthday, 'company_name': company_name}
     password = getpass.getpass(prompt='Password: ')
-    print('password assesment:', get_password_strength(password, user_data))
+    forbiden_pass = load_forbiden_pass('./forbiden_password.txt')
+    print('password assesment:',
+          get_password_strength(password, user_data, forbiden_pass))
